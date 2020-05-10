@@ -1,10 +1,4 @@
-<<<<<<< HEAD
 Display the version
 
 	version
-=======
-Display the version
-
-	version
->>>>>>> 2bda2d2289b11998c1550d61dd4e386d13f41e7d
 	ver

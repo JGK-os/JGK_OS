@@ -1,12 +1,5 @@
-<<<<<<< HEAD
 Display the contenent of a folder
 
 	ls [<command>] <path>
 
-=======
-Display the contenent of a folder
-
-	ls [<command>] <path>
-
->>>>>>> 2bda2d2289b11998c1550d61dd4e386d13f41e7d
 -a		-Show also invisible files (start with ".")

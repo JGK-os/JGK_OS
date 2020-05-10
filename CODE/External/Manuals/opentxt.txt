@@ -1,10 +1,4 @@
-<<<<<<< HEAD
 Simple text editor
 
 	opentxt [<file path>]
-=======
-Simple text editor
-
-	opentxt [<file path>]
->>>>>>> 2bda2d2289b11998c1550d61dd4e386d13f41e7d
 	otxt
