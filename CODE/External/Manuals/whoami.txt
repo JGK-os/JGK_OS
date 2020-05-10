@@ -1,0 +1,5 @@
+Display the current user
+
+	whoami
+	user
+	me

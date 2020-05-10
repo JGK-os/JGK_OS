@@ -1,0 +1,4 @@
+Display the version
+
+	version
+	ver
