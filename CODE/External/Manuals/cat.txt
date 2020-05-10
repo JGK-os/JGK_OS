@@ -1,3 +1,8 @@
+<<<<<<< HEAD
 Print on terminal a file contenent
 
+=======
+Print on terminal a file contenent
+
+>>>>>>> 2bda2d2289b11998c1550d61dd4e386d13f41e7d
 	cat <file path>

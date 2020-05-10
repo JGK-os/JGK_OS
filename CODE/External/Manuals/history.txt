@@ -1,7 +1,16 @@
+<<<<<<< HEAD
 Run a previos command
 
 	history [<number>] [<command> <number>]
 	hist
 	h
 
+=======
+Run a previos command
+
+	history [<number>] [<command> <number>]
+	hist
+	h
+
+>>>>>>> 2bda2d2289b11998c1550d61dd4e386d13f41e7d
 -s		-Display previous commands

@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 Clear the console 
 
 	cls
+=======
+Clear the console 
+
+	cls
+>>>>>>> 2bda2d2289b11998c1550d61dd4e386d13f41e7d
 	clear
