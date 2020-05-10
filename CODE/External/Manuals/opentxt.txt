@@ -1,0 +1,4 @@
+Simple text editor
+
+	opentxt [<file path>]
+	otxt

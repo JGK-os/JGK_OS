@@ -1,0 +1,4 @@
+Shows a help message
+
+	help [command]
+

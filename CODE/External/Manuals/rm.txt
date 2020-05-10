@@ -1,0 +1,4 @@
+Remove a file
+
+	del <file path>
+	rm

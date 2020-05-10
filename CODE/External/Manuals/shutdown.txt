@@ -1,0 +1,6 @@
+Shutdown the system
+
+	shutdown [<command>]
+
+
+-r		-Reboot the system
