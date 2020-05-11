@@ -23,7 +23,7 @@ namespace OS
             {
                 Echo( input );
             }
-            else if (input[0].Equals( "rm" ))
+            else if (input[0].Equals( "rm" ) || input[0].Equals( "remove" ) || input[0].Equals( "delete" ) || input[0].Equals( "del" ))
             {
                 Remove( input );
             }
@@ -39,7 +39,7 @@ namespace OS
             {
                 Ls( input );
             }
-            else if (input[0].Equals( "touch" ) || input[0].Equals( "cnf" ))
+            else if (input[0].Equals( "touch" ) || input[0].Equals( "cnf" ) || input[0].Equals( "create" ) || input[0].Equals( "new" ))
             {
                 CreateNewFile( input );
             }
@@ -102,7 +102,7 @@ namespace OS
             Console.WriteLine();
         }
 
-        #region System
+        #region File Management
 
         private static void CreateNewDir(string[] input)
         {
@@ -128,7 +128,7 @@ namespace OS
         {
             if (input.Length >= 2)
             {
-                if (!(input[1].Equals( "-v" )))
+                if (!(input[1].Equals( "-v" ))) //Ask for a confirm
                 {
                     for (int i = 1 ; i < input.Length ; i++)
                     {
@@ -137,23 +137,28 @@ namespace OS
                 }
                 else
                 {
+                    bool boolean = true;
+                    ConsoleKeyInfo c;
+
                     for (int i = 2 ; i < input.Length ; i++)
                     {
-                        ConsoleKeyInfo c;
-
-                        while (c.Key != ConsoleKey.Y && c.Key != ConsoleKey.N)
+                        while (boolean)
                         {
+                            boolean = true;
                             Console.WriteLine();
                             Console.Write( $"Are you sure you want to delete {input[i]}? (y or n) : " );
                             c = Console.ReadKey();
 
+                            Console.WriteLine();
+
                             if (c.Key == ConsoleKey.Y)
                             {
                                 FileSystem.Remove( Kernel.pwd + input[i] );
+                                boolean = false;
                             }
                             else if (c.Key == ConsoleKey.N)
                             {
-                                continue;
+                                boolean = false;
                             }
                         }
                     }
@@ -164,6 +169,40 @@ namespace OS
                 Console.WriteLine( "No file name specified" );
             }
         }
+
+        private static void Ls(string[] input) //Change colors
+        {
+            string[] files;
+
+            if (input.Length == 2)
+            {
+                files = FileSystem.Ls( Kernel.pwd + input[1] );
+            }
+            else
+            {
+                files = FileSystem.Ls( Kernel.pwd );
+            }
+
+            for (int i = 0 ; i < files.Length ; i++)
+            {
+                if (files[i].EndsWith( ' ' ))
+                {
+                    Console.ForegroundColor = Config.Ls.DirectoryColor;
+                    Console.WriteLine( files[i] );
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+                else
+                {
+                    Console.ForegroundColor = Config.Ls.FileColor;
+                    Console.WriteLine( files[i] );
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+            }
+        }
+
+        #endregion File Management
+
+        #region System
 
         private static void TryShutdown()
         {
@@ -205,36 +244,6 @@ namespace OS
                     {
                         Console.WriteLine( "Abort" );
                     }
-                }
-            }
-        }
-
-        private static void Ls(string[] input) //Change colors
-        {
-            string[] files;
-
-            if (input.Length == 2)
-            {
-                files = FileSystem.Ls( Kernel.pwd + input[1] );
-            }
-            else
-            {
-                files = FileSystem.Ls( Kernel.pwd );
-            }
-
-            for (int i = 0 ; i < files.Length ; i++)
-            {
-                if (files[i].EndsWith( ' ' ))
-                {
-                    Console.ForegroundColor = Config.Ls.DirectoryColor;
-                    Console.WriteLine( files[i] );
-                    Console.ForegroundColor = ConsoleColor.White;
-                }
-                else
-                {
-                    Console.ForegroundColor = Config.Ls.FileColor;
-                    Console.WriteLine( files[i] );
-                    Console.ForegroundColor = ConsoleColor.White;
                 }
             }
         }

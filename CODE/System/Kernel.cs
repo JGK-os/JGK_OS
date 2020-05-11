@@ -87,6 +87,7 @@ Password : dev
                 fs.CreateDirectory( "0:\\System\\" );
                 fs.CreateFile( "0:\\System\\users" );
                 fs.CreateFile( "0:\\System\\readme.txt" );
+                fs.CreateFile( "0:\\System\\config.cnf" );
 
                 string FirstUserFile = "root:0:password1\n" + username + ":1001:" + cPassword;
 

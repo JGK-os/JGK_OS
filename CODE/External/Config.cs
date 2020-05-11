@@ -1,9 +1,12 @@
 using System;
+using System.IO;
 
 namespace OS
 {
     public class Config
     {
+        public static List<string> configFile;
+
         #region Config Variables
 
         public struct Ls
@@ -38,7 +41,7 @@ namespace OS
                         if (defValue == 1)
                             DirectoryColor = ConsoleColor.Green;
                         else if (defValue == 2)
-                            DirectoryColor = ChangeColor();
+                            DirectoryColor = ChangeColor( true , 0 );
 
                         break;
 
@@ -49,7 +52,7 @@ namespace OS
                         if (defValue == 1)
                             FileColor = ConsoleColor.White;
                         else if (defValue == 2)
-                            FileColor = ChangeColor();
+                            FileColor = ChangeColor( true , 0 );
 
                         break;
 
@@ -95,7 +98,7 @@ namespace OS
                             if (defValue == 1)
                                 Path.Color = ConsoleColor.White;
                             else if (defValue == 2)
-                                Path.Color = ChangeColor();
+                                Path.Color = ChangeColor( true , 0 );
 
                             break;
 
@@ -156,7 +159,7 @@ namespace OS
                             if (defValue == 1)
                                 ShellPrecommand.Separator.Color = ConsoleColor.White;
                             else if (defValue == 2)
-                                ShellPrecommand.Separator.Color = ChangeColor();
+                                ShellPrecommand.Separator.Color = ChangeColor( true , 0 );
 
                             break;
 
@@ -204,7 +207,7 @@ namespace OS
                         if (defValue == 1)
                             UsernameColor = ConsoleColor.White;
                         else if (defValue == 2)
-                            UsernameColor = ChangeColor();
+                            UsernameColor = ChangeColor( true , 0 );
 
                         break;
 
@@ -244,6 +247,43 @@ namespace OS
             }
         }
 
+        public static void CustomConfig()
+        {
+            // File di configurazione: 0:\\System\\config.cnf
+            using (FileStream fileReader = new FileStream( "0:\\System\\config.cnf" , FileMode.Open , FileAccess.Read , FileShare.ReadWrite ))
+            {
+                using (StreamReader reader = new StreamReader( fileReader )) // Open the file
+                {
+                    configFile = new List<string>( 10 );
+                    bool a = true;
+
+                    while (a)
+                    {
+                        configFile.Add( reader.ReadLine() );
+
+                        if (configFile.list[configFile.Count - 1] == null)
+                        {
+                            a = false;
+                        }
+                        else
+                        {
+                            configFile.list[configFile.Count - 1] = configFile.list[configFile.Count - 1].Split( " : " )[1];
+                        }
+                    }
+                }
+            }
+
+            int index = 0;
+
+            Ls.DirectoryColor = ChangeColor( false , index++ );
+            Ls.FileColor = ChangeColor( false , index++ );
+            ShellPrecommand.UsernameColor = ChangeColor( false , index++ );
+            ShellPrecommand.Separator.Color = ChangeColor( false , index++ );
+            ShellPrecommand.Separator.Simbol = configFile.list[index++];
+            ShellPrecommand.Path.Color = ChangeColor( false , index++ );
+            ShellPrecommand.Path.Type = Kernel.pwd;
+        }
+
         #region Support
 
         public static void Default()
@@ -252,10 +292,24 @@ namespace OS
             ShellPrecommand.DefaultValues();
         }
 
-        private static ConsoleColor ChangeColor()
+        private static ConsoleColor ChangeColor(bool print , int listIndex)
         {
             string[] tmp = {"White","Black","Gray","Red","Green","Yellow","Blue","Cyan","Magenta", "DarkGray" , "DarkRed","DarkGreen","DarkYellow","DarkBlue","DarkCyan", "DarkMagenta" };
-            int choise = Choose(tmp);
+            int choise = 0;
+
+            if (print)
+                choise = Choose( tmp );
+            else
+            {
+                for (int i = 0 ; i < tmp.Length ; i++)
+                {
+                    if (tmp[i] == configFile.list[listIndex])
+                    {
+                        choise = i + 1;
+                        i = tmp.Length;
+                    }
+                }
+            }
 
             switch (choise)
             {
@@ -329,6 +383,7 @@ namespace OS
                     Console.WriteLine( "{1}\t-{0}" , s[i] , i + 1 );
                 }
             }
+
             Console.WriteLine( "{0} \t-Exit" , s.Length + 1 );
             Console.Write( "Your choise: " );
 
