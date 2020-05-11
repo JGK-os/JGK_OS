@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace OS_Code.Core
+namespace OS
 {
     internal class Crypto
     {

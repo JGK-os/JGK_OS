@@ -1,10 +1,8 @@
 using System;
 using System.IO;
 using Sys = Cosmos.System;
-using External.Tools;
-using OS_Code.Shell;
 
-namespace OS_Code.Core
+namespace OS
 {
     public class Kernel : Sys.Kernel
     {
@@ -26,7 +24,7 @@ namespace OS_Code.Core
 
             #region Installation
 
-            if (!File.Exists( "0:\\System\\users" ))
+           if (!File.Exists( "0:\\System\\users" ))
             {
                 Console.Clear();
 

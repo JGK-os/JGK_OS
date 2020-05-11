@@ -1,0 +1,7 @@
+Run a previos command
+
+	history [<number>] [<command> <number>]
+	hist
+	h
+
+-s		-Display previous commands

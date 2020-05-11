@@ -1,12 +1,18 @@
 using System;
 using System.IO;
 
-namespace OS_Code.Core
+namespace OS
 {
     internal class FileSystem
     {
         #region Commands
-
+        public static void RemoveDir(string path)
+        {
+            if (Directory.Exists(path))
+                Directory.Delete(path);
+            else
+                Console.WriteLine("Invalid directory name");
+        }
         public static void CreateDir(string path)
         {
             if (!Directory.Exists( path ))
