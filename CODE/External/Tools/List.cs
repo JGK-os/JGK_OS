@@ -1,4 +1,4 @@
-namespace OS
+namespace External.Tools
 {
     public class List<T>
     {

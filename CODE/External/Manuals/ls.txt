@@ -1,5 +1,0 @@
-Display the contenent of a folder
-
-	ls [<command>] <path>
-
--a		-Show also invisible files (start with ".")

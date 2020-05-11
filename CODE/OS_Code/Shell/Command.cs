@@ -1,7 +1,8 @@
 using System;
 using Sys = Cosmos.System;
+using OS_Code.Core;
 
-namespace OS
+namespace OS_Code.Shell
 {
     internal class Command
     {

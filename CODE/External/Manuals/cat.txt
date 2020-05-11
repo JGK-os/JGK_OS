@@ -1,3 +1,0 @@
-Print on terminal a file contenent
-
-	cat <file path>
