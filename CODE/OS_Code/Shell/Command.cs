@@ -92,6 +92,10 @@ namespace OS_Code.Shell
                     Config.Set();
                 }
             }
+            else if (input[0].Equals( "miv" ))
+            {
+                MIV.MIV.StartMIV();
+            }
             else
             {
                 Console.WriteLine( "Invalid command" );
