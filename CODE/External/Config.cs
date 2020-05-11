@@ -62,7 +62,7 @@ namespace OS
             }
         }
 
-        public struct ShellPrecommand
+        public struct Prompt
         {
             public static ConsoleColor UsernameColor;
 
@@ -135,8 +135,8 @@ namespace OS
 
                 public static void DefaultValues()
                 {
-                    ShellPrecommand.Separator.Simbol = ">:";
-                    ShellPrecommand.Separator.Color = ConsoleColor.White;
+                    Prompt.Separator.Simbol = ">:";
+                    Prompt.Separator.Color = ConsoleColor.White;
                 }
 
                 public static void Change()
@@ -157,9 +157,9 @@ namespace OS
                             defValue = RestoreDefault();
 
                             if (defValue == 1)
-                                ShellPrecommand.Separator.Color = ConsoleColor.White;
+                                Prompt.Separator.Color = ConsoleColor.White;
                             else if (defValue == 2)
-                                ShellPrecommand.Separator.Color = ChangeColor( true , 0 );
+                                Prompt.Separator.Color = ChangeColor( true , 0 );
 
                             break;
 
@@ -167,12 +167,12 @@ namespace OS
                             defValue = RestoreDefault();
 
                             if (defValue == 1)
-                                ShellPrecommand.Separator.Simbol = ">:";
+                                Prompt.Separator.Simbol = ">:";
                             else if (defValue == 2)
                             {
                                 Console.WriteLine();
                                 Console.WriteLine( "Write your own separator" );
-                                ShellPrecommand.Separator.Simbol = Console.ReadLine();
+                                Prompt.Separator.Simbol = Console.ReadLine();
                             }
                             break;
 
@@ -243,53 +243,124 @@ namespace OS
             }
             else if (input == 2)
             {
-                ShellPrecommand.Change();
+                Prompt.Change();
             }
         }
 
-        public static void CustomConfig()
+        #region Custom
+
+        public static void LoadCustom()
         {
-            // File di configurazione: 0:\\System\\config.cnf
-            using (FileStream fileReader = new FileStream( "0:\\System\\config.cnf" , FileMode.Open , FileAccess.Read , FileShare.ReadWrite ))
+            // File di configurazione: "0:\\System\\config.cnf"
+            configFile = new List<string>( 10 );
+
+            string[] fileConfig = File.ReadAllLines( "0:\\System\\config.cnf" );
+
+            for (int i = 0 ; i < fileConfig.Length - 1 ; i++)
             {
-                using (StreamReader reader = new StreamReader( fileReader )) // Open the file
-                {
-                    configFile = new List<string>( 10 );
-                    bool a = true;
-
-                    while (a)
-                    {
-                        configFile.Add( reader.ReadLine() );
-
-                        if (configFile.list[configFile.Count - 1] == null)
-                        {
-                            a = false;
-                        }
-                        else
-                        {
-                            configFile.list[configFile.Count - 1] = configFile.list[configFile.Count - 1].Split( " : " )[1];
-                        }
-                    }
-                }
+                configFile.Add( fileConfig[i] );
+                configFile.list[i] = configFile.list[i].Split( " : " )[1];
             }
 
             int index = 0;
 
             Ls.DirectoryColor = ChangeColor( false , index++ );
             Ls.FileColor = ChangeColor( false , index++ );
-            ShellPrecommand.UsernameColor = ChangeColor( false , index++ );
-            ShellPrecommand.Separator.Color = ChangeColor( false , index++ );
-            ShellPrecommand.Separator.Simbol = configFile.list[index++];
-            ShellPrecommand.Path.Color = ChangeColor( false , index++ );
-            ShellPrecommand.Path.Type = Kernel.pwd;
+            Prompt.UsernameColor = ChangeColor( false , index++ );
+            Prompt.Separator.Color = ChangeColor( false , index++ );
+            Prompt.Separator.Simbol = configFile.list[index++];
+            Prompt.Path.Color = ChangeColor( false , index++ );
+            Prompt.Path.Type = Kernel.pwd;
         }
+
+        public static void SaveCustom()
+        {
+            File.WriteAllText( "0:\\System\\config.cnf" ,
+$@"Directory Color : {ColorToString( Ls.DirectoryColor )}
+File Color : {ColorToString( Ls.FileColor )}
+Username Color : {ColorToString( Prompt.UsernameColor )}
+Separator Color : {ColorToString( Prompt.Separator.Color )}
+Separator Simbol : >:
+Path Color : {ColorToString( Prompt.Path.Color )}
+                " );
+        }
+
+        public static string ColorToString(ConsoleColor color)
+        {
+            if (ConsoleColor.Black == color)
+            {
+                return "Black";
+            }
+            else if (ConsoleColor.Blue == color)
+            {
+                return "Blue";
+            }
+            else if (ConsoleColor.Cyan == color)
+            {
+                return "Cyan";
+            }
+            else if (ConsoleColor.DarkBlue == color)
+            {
+                return "DarkBlue";
+            }
+            else if (ConsoleColor.DarkCyan == color)
+            {
+                return "DarkCyan";
+            }
+            else if (ConsoleColor.DarkGray == color)
+            {
+                return "DarkGray";
+            }
+            else if (ConsoleColor.DarkGreen == color)
+            {
+                return "DarkGreen";
+            }
+            else if (ConsoleColor.DarkMagenta == color)
+            {
+                return "DarkMagenta";
+            }
+            else if (ConsoleColor.DarkRed == color)
+            {
+                return "DarkRed";
+            }
+            else if (ConsoleColor.DarkYellow == color)
+            {
+                return "DarkYellow";
+            }
+            else if (ConsoleColor.Gray == color)
+            {
+                return "Gray";
+            }
+            else if (ConsoleColor.Green == color)
+            {
+                return "Green";
+            }
+            else if (ConsoleColor.Magenta == color)
+            {
+                return "Magenta";
+            }
+            else if (ConsoleColor.Red == color)
+            {
+                return "Red";
+            }
+            else if (ConsoleColor.Yellow == color)
+            {
+                return "Yellow";
+            }
+            else
+            {
+                return "White";
+            }
+        }
+
+        #endregion Custom
 
         #region Support
 
         public static void Default()
         {
             Ls.DefaultValues();
-            ShellPrecommand.DefaultValues();
+            Prompt.DefaultValues();
         }
 
         private static ConsoleColor ChangeColor(bool print , int listIndex)

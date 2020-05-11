@@ -82,7 +82,14 @@ namespace OS
             }
             else if (input[0].Equals( "config" ))
             {
-                Config.Set();
+                if (input.Length == 2 && input[1].Equals( "-s" ))//save custom config
+                {
+                    Config.SaveCustom();
+                }
+                else
+                {
+                    Config.Set();
+                }
             }
             else
             {

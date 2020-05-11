@@ -22,36 +22,6 @@ namespace OS
             var fs = new Sys.FileSystem.CosmosVFS();
             Sys.FileSystem.VFS.VFSManager.RegisterVFS( fs );
 
-            #region Logo
-
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.Write( $@"
-_________ _______  _             _______  _______
-\__    _/(  ____ \| \    /\     (  ___  )(  ____ \
-   )  (  | (    \/|  \  / /     | (   ) || (    \/
-   |  |  | |      |  (_/ /      | |   | || (_____
-   |  |  | | ____ |   _ (       | |   | |(_____  )
-   |  |  | | \_  )|  ( \ \      | |   | |      ) |
-|\_)  )  | (___) ||  /  \ \     | (___) |/\____) |
-(____/   (_______)|_/    \/_____(_______)\_______)
-                          (_____)
-
-Username : developer
-Password : dev
-
-----------------------------------------------
- JKG OS has been booted ({version})
- Type help for command list
-----------------------------------------------
-
-            " );
-
-            Console.WriteLine();
-            Console.ForegroundColor = ConsoleColor.White;
-
-            #endregion Logo
-
             #region Installation
 
             if (!File.Exists( "0:\\System\\users" ))
@@ -85,13 +55,20 @@ Password : dev
                 Console.WriteLine();
 
                 fs.CreateDirectory( "0:\\System\\" );
-                fs.CreateFile( "0:\\System\\users" );
+                fs.CreateFile( "0:\\System\\USERS" );
                 fs.CreateFile( "0:\\System\\readme.txt" );
-                fs.CreateFile( "0:\\System\\config.cnf" );
+                fs.CreateFile( "0:\\System\\CONFIG.cnf" );
 
                 string FirstUserFile = "root:0:password1\n" + username + ":1001:" + cPassword;
 
                 File.WriteAllText( "0:\\System\\users" , FirstUserFile );
+
+                #region Config
+
+                Config.Default();
+                Config.SaveCustom();
+
+                #endregion Config
 
                 #endregion Create Directory
 
@@ -102,21 +79,51 @@ Password : dev
 
             #endregion Installation
 
-            Config.Default();
+            Config.LoadCustom();
+
+            #region Logo
+
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.Write( $@"
+_________ _______  _             _______  _______
+\__    _/(  ____ \| \    /\     (  ___  )(  ____ \
+   )  (  | (    \/|  \  / /     | (   ) || (    \/
+   |  |  | |      |  (_/ /      | |   | || (_____
+   |  |  | | ____ |   _ (       | |   | |(_____  )
+   |  |  | | \_  )|  ( \ \      | |   | |      ) |
+|\_)  )  | (___) ||  /  \ \     | (___) |/\____) |
+(____/   (_______)|_/    \/_____(_______)\_______)
+                          (_____)
+
+Username : developer
+Password : dev
+
+----------------------------------------------
+ JKG OS has been booted ({version})
+ Type help for command list
+----------------------------------------------
+
+            " );
+
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.White;
+
+            #endregion Logo
 
             Crypto.Login();
         }
 
         protected override void Run()
         {
-            Console.ForegroundColor = Config.ShellPrecommand.UsernameColor;
+            Console.ForegroundColor = Config.Prompt.UsernameColor;
             Console.Write( $"{username}" );
 
-            Console.ForegroundColor = Config.ShellPrecommand.Path.Color;
-            Console.Write( $" : {Config.ShellPrecommand.Path.Type} " );
+            Console.ForegroundColor = Config.Prompt.Path.Color;
+            Console.Write( $" : {Config.Prompt.Path.Type} " );
 
-            Console.ForegroundColor = Config.ShellPrecommand.Separator.Color;
-            Console.Write( $"{Config.ShellPrecommand.Separator.Simbol}" );
+            Console.ForegroundColor = Config.Prompt.Separator.Color;
+            Console.Write( $"{Config.Prompt.Separator.Simbol}" );
             Console.ForegroundColor = ConsoleColor.White;
 
             if (!nextCommand)
