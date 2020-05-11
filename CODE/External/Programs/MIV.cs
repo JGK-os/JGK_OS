@@ -6,6 +6,14 @@ namespace MIV
 {
     internal class MIV
     {
+        /*
+                TODO
+
+                        -Arrows for navigation
+                        -Better page printing
+                        -Cursor for indicating the position
+        */
+
         private static string FileName;
 
         public static void printMIVStartScreen()
@@ -122,6 +130,7 @@ namespace MIV
                 {
                     chars[i] = start[i];
                 }
+
                 printMIVScreen( chars , pos , infoBar , editMode );
             }
 
