@@ -1,7 +1,9 @@
 using System;
 using System.IO;
+using External.Tools;
+using OS_Code.Core;
 
-namespace OS
+namespace OS_Code.Shell
 {
     public class Config
     {
@@ -16,7 +18,7 @@ namespace OS
 
             public static void DefaultValues()
             {
-                DirectoryColor = ConsoleColor.Green;
+                DirectoryColor = ConsoleColor.Yellow;
                 FileColor = ConsoleColor.White;
             }
 

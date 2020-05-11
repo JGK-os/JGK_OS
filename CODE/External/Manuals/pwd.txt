@@ -1,3 +1,0 @@
-Shows your directory
-
-	pwd

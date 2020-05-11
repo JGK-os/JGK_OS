@@ -1,4 +1,0 @@
-Clear the console 
-
-	cls
-	clear

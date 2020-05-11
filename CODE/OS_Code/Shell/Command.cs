@@ -1,90 +1,89 @@
 using System;
-using System.IO;
-using System.Net.Security;
 using Sys = Cosmos.System;
+using OS_Code.Core;
 
-namespace OS
+namespace OS_Code.Shell
 {
     internal class Command
     {
         public static void Identifier(string[] input)
         {
-            if (input[0].Equals("help"))
+            if (input[0].Equals( "help" ))
             {
-                Help(input);
+                Help( input );
             }
-            else if (input[0].Equals("cls") || input[0].Equals("cls"))
+            else if (input[0].Equals( "cls" ) || input[0].Equals( "cls" ))
             {
                 Console.Clear();
             }
-            else if (input[0].Equals("ver") || input[0].Equals("version"))
+            else if (input[0].Equals( "ver" ) || input[0].Equals( "version" ))
             {
-                Console.WriteLine("OS version: {0}", Kernel.version);
+                Console.WriteLine( "OS version: {0}" , Kernel.version );
             }
-            else if (input[0].Equals("echo"))
+            else if (input[0].Equals( "echo" ))
             {
-                Echo(input);
+                Echo( input );
             }
-            else if (input[0].Equals("rm") || input[0].Equals("remove") || input[0].Equals("delete") || input[0].Equals("del"))
+            else if (input[0].Equals( "rm" ) || input[0].Equals( "remove" ) || input[0].Equals( "delete" ) || input[0].Equals( "del" ))
             {
-                Remove(input);
+                Remove( input );
             }
-            else if (input[0].Equals("h") || input[0].Equals("hist") || input[0].Equals("history"))
+            else if (input[0].Equals( "h" ) || input[0].Equals( "hist" ) || input[0].Equals( "history" ))
             {
-                History(input);
+                History( input );
             }
-            else if (input[0].Equals("shutdown"))
+            else if (input[0].Equals( "shutdown" ))
             {
                 TryShutdown();
             }
-            else if (input[0].Equals("ls"))
+            else if (input[0].Equals( "ls" ))
             {
-                Ls(input);
+                Ls( input );
             }
-            else if (input[0].Equals("touch") || input[0].Equals("cnf") || input[0].Equals("create") || input[0].Equals("new"))
+            else if (input[0].Equals( "touch" ) || input[0].Equals( "cnf" ) || input[0].Equals( "create" ) || input[0].Equals( "new" ))
             {
-                CreateNewFile(input);
+                CreateNewFile( input );
             }
-            else if (input[0].Equals("mkdir") || input[0].Equals("cnd"))
+            else if (input[0].Equals( "mkdir" ) || input[0].Equals( "cnd" ))
             {
-                CreateNewDir(input);
+                CreateNewDir( input );
             }
-            else if (input[0].Equals("cat"))
+            else if (input[0].Equals( "cat" ))
             {
-                if (input.Length.Equals(2))
+                if (input.Length.Equals( 2 ))
                 {
                     string path = input[1];
-                    Console.WriteLine(FileSystem.Cat(Kernel.pwd + path));
+                    Console.WriteLine( FileSystem.Cat( Kernel.pwd + path ) );
                 }
                 else
                 {
-                    Console.WriteLine("No file specified");
+                    Console.WriteLine( "No file specified" );
                 }
             }
-            else if (input[0].Equals("pwd"))
+            else if (input[0].Equals( "pwd" ))
             {
-                Console.WriteLine(Kernel.pwd);
+                Console.WriteLine( Kernel.pwd );
             }
-            else if (input[0].Equals("whoami"))
+            else if (input[0].Equals( "whoami" ))
             {
-                Console.WriteLine(Kernel.username);
+                Console.WriteLine( Kernel.username );
             }
-            else if (input[0].Equals("cd"))
+            else if (input[0].Equals( "cd" ))
             {
-                for (int i = 1; i < input.Length; i++)
-                    FileSystem.Cd(input[i]);
+                for (int i = 1 ; i < input.Length ; i++)
+                    FileSystem.Cd( input[i] );
             }
-            else if (input[0].Equals("exit"))
+            else if (input[0].Equals( "exit" ))
             {
                 Sys.Power.Shutdown();
             }
-            else if (input[0].Equals("reboot"))
+            else if (input[0].Equals( "reboot" ))
             {
                 TryReboot();
             }
-            else if (input[0].Equals("config"))
+            else if (input[0].Equals( "config" ))
             {
-                if (input.Length == 2 && input[1].Equals("-s"))//save custom config
+                if (input.Length == 2 && input[1].Equals( "-s" ))//save custom config
                 {
                     Config.SaveCustom();
                 }
@@ -93,14 +92,18 @@ namespace OS
                     Config.Set();
                 }
             }
-            else if (input[0].Equals("rmd") || input[0].Equals("rmdir"))
+            else if (input[0].Equals( "miv" ))
             {
-                RemoveDir(input);
+                MIV.MIV.StartMIV();
+            }
+            else if (input[0].Equals( "rmd" ) || input[0].Equals( "rmdir" ))
+            {
+                RemoveDir( input );
             }
             else
             {
-                Console.WriteLine("Invalid command");
-                Console.WriteLine("Type \"help\" for a comand list");
+                Console.WriteLine( "Invalid command" );
+                Console.WriteLine( "Type \"help\" for a comand list" );
                 Console.WriteLine();
             }
         }
@@ -110,34 +113,36 @@ namespace OS
         private static void InvalidParameter()
         {
             Console.WriteLine();
-            Console.WriteLine("The parameter is not valid");
-            Console.WriteLine("Try \"help <command>\"");
+            Console.WriteLine( "The parameter is not valid" );
+            Console.WriteLine( "Try \"help <command>\"" );
             Console.WriteLine();
         }
 
         #region File Management
+
         private static void RemoveDir(string[] input)
         {
-            if (input.Length.Equals(2))
+            if (input.Length.Equals( 2 ))
                 try
                 {
-                    FileSystem.RemoveDir(Kernel.pwd + input[1]);
+                    FileSystem.RemoveDir( Kernel.pwd + input[1] );
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    Console.WriteLine( ex.Message );
                 }
             else
-                Console.WriteLine("No file name specified");
+                Console.WriteLine( "No file name specified" );
         }
+
         private static void CreateNewDir(string[] input)
         {
             if (input.Length == 2)
             {
-                FileSystem.CreateDir(Kernel.pwd + input[1]);
+                FileSystem.CreateDir( Kernel.pwd + input[1] );
             }
             else
-                Console.WriteLine("No directory name specified");
+                Console.WriteLine( "No directory name specified" );
         }
 
         private static void CreateNewFile(string[] input)
@@ -146,35 +151,33 @@ namespace OS
             {
                 try
                 {
-                    FileSystem.CreateFile(Kernel.pwd + input[1]);
+                    FileSystem.CreateFile( Kernel.pwd + input[1] );
                 }
                 catch (Exception ex)
                 {
-
-                    Console.WriteLine(ex.Message);
+                    Console.WriteLine( ex.Message );
                 }
             }
             else
-                Console.WriteLine("No file name specified");
+                Console.WriteLine( "No file name specified" );
         }
 
         private static void Remove(string[] input)
         {
             if (input.Length >= 2)
             {
-                if (!(input[1].Equals("-v"))) //Ask for a confirm
+                if (!(input[1].Equals( "-v" ))) //Ask for a confirm
                 {
-                    for (int i = 1; i < input.Length; i++)
+                    for (int i = 1 ; i < input.Length ; i++)
                     {
                         try
                         {
-                            FileSystem.Remove(Kernel.pwd + input[i]);
+                            FileSystem.Remove( Kernel.pwd + input[i] );
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine(ex.Message);
+                            Console.WriteLine( ex.Message );
                         }
-
                     }
                 }
                 else
@@ -182,20 +185,20 @@ namespace OS
                     bool boolean = true;
                     ConsoleKeyInfo c;
 
-                    for (int i = 2; i < input.Length; i++)
+                    for (int i = 2 ; i < input.Length ; i++)
                     {
                         while (boolean)
                         {
                             boolean = true;
                             Console.WriteLine();
-                            Console.Write($"Are you sure you want to delete {input[i]}? (y or n) : ");
+                            Console.Write( $"Are you sure you want to delete {input[i]}? (y or n) : " );
                             c = Console.ReadKey();
 
                             Console.WriteLine();
 
                             if (c.Key == ConsoleKey.Y)
                             {
-                                FileSystem.Remove(Kernel.pwd + input[i]);
+                                FileSystem.Remove( Kernel.pwd + input[i] );
                                 boolean = false;
                             }
                             else if (c.Key == ConsoleKey.N)
@@ -208,7 +211,7 @@ namespace OS
             }
             else
             {
-                Console.WriteLine("No file name specified");
+                Console.WriteLine( "No file name specified" );
             }
         }
 
@@ -218,25 +221,25 @@ namespace OS
 
             if (input.Length == 2)
             {
-                files = FileSystem.Ls(Kernel.pwd + input[1]);
+                files = FileSystem.Ls( Kernel.pwd + input[1] );
             }
             else
             {
-                files = FileSystem.Ls(Kernel.pwd);
+                files = FileSystem.Ls( Kernel.pwd );
             }
 
-            for (int i = 0; i < files.Length; i++)
+            for (int i = 0 ; i < files.Length ; i++)
             {
-                if (files[i].EndsWith(' '))
+                if (files[i].EndsWith( ' ' ))
                 {
                     Console.ForegroundColor = Config.Ls.DirectoryColor;
-                    Console.WriteLine(files[i]);
+                    Console.WriteLine( files[i] );
                     Console.ForegroundColor = ConsoleColor.White;
                 }
                 else
                 {
                     Console.ForegroundColor = Config.Ls.FileColor;
-                    Console.WriteLine(files[i]);
+                    Console.WriteLine( files[i] );
                     Console.ForegroundColor = ConsoleColor.White;
                 }
             }
@@ -253,7 +256,7 @@ namespace OS
             while (c.Key != ConsoleKey.Y && c.Key != ConsoleKey.N)
             {
                 Console.WriteLine();
-                Console.Write("Are you sure you want to shutdown the system? (y or n) : ");
+                Console.Write( "Are you sure you want to shutdown the system? (y or n) : " );
                 c = Console.ReadKey();
 
                 if (c.Key == ConsoleKey.Y)
@@ -262,7 +265,7 @@ namespace OS
                 }
                 else if (c.Key == ConsoleKey.N)
                 {
-                    Console.WriteLine("Abort");
+                    Console.WriteLine( "Abort" );
                 }
             }
         }
@@ -275,7 +278,7 @@ namespace OS
                 while (c.Key != ConsoleKey.Y && c.Key != ConsoleKey.N)
                 {
                     Console.WriteLine();
-                    Console.Write("Are you sure you want to reboot the system? (y or n) : ");
+                    Console.Write( "Are you sure you want to reboot the system? (y or n) : " );
                     c = Console.ReadKey();
 
                     if (c.Key == ConsoleKey.Y)
@@ -284,7 +287,7 @@ namespace OS
                     }
                     else if (c.Key == ConsoleKey.N)
                     {
-                        Console.WriteLine("Abort");
+                        Console.WriteLine( "Abort" );
                     }
                 }
             }
@@ -296,24 +299,24 @@ namespace OS
 
         private static void Help(string[] command)
         {
-            if (command.Length == 1 || command[1].Equals("help"))
+            if (command.Length == 1 || command[1].Equals( "help" ))
             {
                 Console.WriteLine();
-                Console.WriteLine("Here the commands:");
-                Console.WriteLine("[NI] = not implemented yet");
+                Console.WriteLine( "Here the commands:" );
+                Console.WriteLine( "[NI] = not implemented yet" );
                 Console.WriteLine();
                 Console.WriteLine();
-                Console.WriteLine("cat     \t\t -Print a file content");
-                Console.WriteLine("cd      \t\t -Change drectory");
-                Console.WriteLine("cls     \t\t -Clear the sceen");
-                Console.WriteLine("echo    \t\t -Print text back");
-                Console.WriteLine("help    \t\t -Display this message");
-                Console.WriteLine("hist    \t\t -Use last command");
-                Console.WriteLine("ls      \t\t -List files and directorys");
-                Console.WriteLine("pwd     \t\t -Show current directory");
-                Console.WriteLine("rm      \t\t -[NI]Remove a file or directory");
-                Console.WriteLine("ver     \t\t -Display the version");
-                Console.WriteLine("whoami  \t\t -Who are you");
+                Console.WriteLine( "cat     \t\t -Print a file content" );
+                Console.WriteLine( "cd      \t\t -Change drectory" );
+                Console.WriteLine( "cls     \t\t -Clear the sceen" );
+                Console.WriteLine( "echo    \t\t -Print text back" );
+                Console.WriteLine( "help    \t\t -Display this message" );
+                Console.WriteLine( "hist    \t\t -Use last command" );
+                Console.WriteLine( "ls      \t\t -List files and directorys" );
+                Console.WriteLine( "pwd     \t\t -Show current directory" );
+                Console.WriteLine( "rm      \t\t -[NI]Remove a file or directory" );
+                Console.WriteLine( "ver     \t\t -Display the version" );
+                Console.WriteLine( "whoami  \t\t -Who are you" );
                 Console.WriteLine();
             }
             else
@@ -326,9 +329,9 @@ namespace OS
         {
             Console.WriteLine();
 
-            for (int i = 1; i < input.Length; i++)
+            for (int i = 1 ; i < input.Length ; i++)
             {
-                Console.Write(input[i] + " ");
+                Console.Write( input[i] + " " );
             }
 
             Console.WriteLine();
@@ -340,18 +343,18 @@ namespace OS
             if (input.Length == 1)
             {
                 Kernel.nextCommand = true;
-                Kernel.history.Add(Kernel.history.list[Kernel.history.Count - 2]);
+                Kernel.history.Add( Kernel.history.list[Kernel.history.Count - 2] );
             }
-            else if (int.TryParse(input[1], out int n) && Kernel.history.Count - n - 1 > 0 && n != 0)
+            else if (int.TryParse( input[1] , out int n ) && Kernel.history.Count - n - 1 > 0 && n != 0)
             {
                 Kernel.nextCommand = true;
-                Kernel.history.Add(Kernel.history.list[Kernel.history.Count - n - 1]);
+                Kernel.history.Add( Kernel.history.list[Kernel.history.Count - n - 1] );
             }
-            else if (input[1].Equals("-c"))
+            else if (input[1].Equals( "-c" ))
             {
                 Kernel.history.Clear();
             }
-            else if (input.Length.Equals(3) && input[1].Equals("-s") && int.TryParse(input[2], out n))
+            else if (input.Length.Equals( 3 ) && input[1].Equals( "-s" ) && int.TryParse( input[2] , out n ))
             {
                 if (n > Kernel.history.Count)
                 {
@@ -364,16 +367,16 @@ namespace OS
 
                 if (n > 0)
                 {
-                    for (int i = Kernel.history.Count - n; i < Kernel.history.Count; i++)
+                    for (int i = Kernel.history.Count - n ; i < Kernel.history.Count ; i++)
                     {
-                        Console.WriteLine(Kernel.history.list[i]);
+                        Console.WriteLine( Kernel.history.list[i] );
                     }
                 }
                 else
                 {
-                    for (int i = 0; i < -n; i++)
+                    for (int i = 0 ; i < -n ; i++)
                     {
-                        Console.WriteLine(Kernel.history.list[i]);
+                        Console.WriteLine( Kernel.history.list[i] );
                     }
                 }
             }
