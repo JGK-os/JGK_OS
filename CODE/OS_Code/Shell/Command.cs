@@ -100,6 +100,14 @@ namespace OS_Code.Shell
             {
                 RemoveDir( input );
             }
+            else if (input[0].Equals("mv") || input[0].Equals("move"))
+            {
+                Move(input);
+            }
+            else if (input[0].Equals("cp") || input[0].Equals("copy"))
+            {
+                CopyFile(input);
+            }
             else
             {
                 Console.WriteLine( "Invalid command" );
@@ -119,7 +127,23 @@ namespace OS_Code.Shell
         }
 
         #region File Management
-
+        private static void CopyFile(string[] input)
+        {
+            if (input.Length.Equals(3))
+                FileSystem.Copy(Kernel.pwd + input[1], Kernel.pwd + input[2]);
+            else
+                InvalidParameter();
+        }
+        private static void Move(string[] input)
+        {
+            if (input.Length.Equals(3))
+            {
+                FileSystem.Copy(Kernel.pwd + input[1], Kernel.pwd + input[2]);
+                FileSystem.Remove(Kernel.pwd + input[1]);
+            }
+            else
+                InvalidParameter();
+        }
         private static void RemoveDir(string[] input)
         {
             if (input.Length.Equals( 2 ))

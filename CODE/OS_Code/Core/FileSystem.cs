@@ -6,7 +6,19 @@ namespace OS_Code.Core
     internal class FileSystem
     {
         #region Commands
-
+        public static void Copy(string originPath, string destPath)
+        {
+            if (File.Exists(originPath))
+            {
+                if (originPath == destPath)
+                {
+                    destPath += "-COPY";
+                }
+                File.Copy(originPath, destPath);
+            }
+            else
+                Console.WriteLine("Invalid source file name");
+        }
         public static void RemoveDir(string path)
         {
             if (Directory.Exists( path ))
