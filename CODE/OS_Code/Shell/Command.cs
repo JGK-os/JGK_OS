@@ -92,9 +92,9 @@ namespace OS_Code.Shell
                     Config.Set();
                 }
             }
-            else if (input[0].Equals( "miv" ))
+            else if (input[0].Equals( "txt" ))
             {
-                MIV.MIV.StartMIV();
+                External.Program.TextEditor.TextEditor.Start( input.Length == 2 ? input[1] : "" );
             }
             else if (input[0].Equals( "rmd" ) || input[0].Equals( "rmdir" ))
             {
