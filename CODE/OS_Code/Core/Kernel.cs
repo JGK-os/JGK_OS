@@ -3,6 +3,7 @@ using System.IO;
 using Sys = Cosmos.System;
 using External.Tools;
 using OS_Code.Shell;
+using System.Threading;
 
 namespace OS_Code.Core
 {
@@ -129,24 +130,32 @@ Password : dev
 
         protected override void Run()
         {
-            Console.ForegroundColor = Config.Prompt.UsernameColor;
-            Console.Write($"{username}");
-
-            Console.ForegroundColor = Config.Prompt.Path.Color;
-            Console.Write($" : {Config.Prompt.Path.Type} ");
-
-            Console.ForegroundColor = Config.Prompt.Separator.Color;
-            Console.Write($"{Config.Prompt.Separator.Simbol}");
-            Console.ForegroundColor = ConsoleColor.White;
-
-            if (!nextCommand)
+            try
             {
-                history.Add(Console.ReadLine().ToLower());
+                Console.ForegroundColor = Config.Prompt.UsernameColor;
+                Console.Write($"{username}");
+
+                Console.ForegroundColor = Config.Prompt.Path.Color;
+                Console.Write($" : {Config.Prompt.Path.Type} ");
+
+                Console.ForegroundColor = Config.Prompt.Separator.Color;
+                Console.Write($"{Config.Prompt.Separator.Simbol}");
+                Console.ForegroundColor = ConsoleColor.White;
+
+                if (!nextCommand)
+                {
+                    history.Add(Console.ReadLine());
+                }
+                string[] input = history.list[history.Count - 1].Split(' ');
+                input[0] = input[0].ToLower();
+                nextCommand = false;
+                Command.Identifier(input);
+                
             }
-
-            nextCommand = false;
-
-            Command.Identifier(history.list[history.Count - 1].Split());
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }
