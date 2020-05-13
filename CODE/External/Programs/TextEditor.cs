@@ -9,9 +9,9 @@ namespace External.Program.TextEditor
         #region Variables
 
         private static string FileName { get; set; } = string.Empty;
-        private static string[] Text { get; set; } = new string[50];
+        private static string[] Text { get; set; }
 
-        private static int  UsedLines     = 0;
+        private static int  MaxLines      = 23;
         private static int  Col           = 0;
         private static int  Row           = 0;
 
@@ -19,7 +19,20 @@ namespace External.Program.TextEditor
 
         public static void Start(string name)
         {
+            Text = new string[24];
+            Col = 0;
+            Row = 0;
+
             FileManagement( name );
+
+            Start:
+
+            Console.SetCursorPosition( 0 , 0 );
+
+            for (int i = 0 ; i < MaxLines ; i++)
+            {
+                Console.WriteLine( Text[i] );
+            }
 
             bool running = true;
 
@@ -27,19 +40,61 @@ namespace External.Program.TextEditor
             {
                 Console.SetCursorPosition( Col , Row );
 
-                OnDataReceive();
+                running = OnDataReceive();
             }
 
             Console.Clear();
 
             if (Text != null)
             {
-                Save();
-                Console.WriteLine( "Content has been saved to " + FileName );
+                Console.WriteLine( "Choose an option" );
+                Console.WriteLine();
+                Console.WriteLine( "\t1 - Save" );
+                Console.WriteLine();
+                Console.WriteLine( "\t2 - Save and Exit" );
+                Console.WriteLine();
+                Console.WriteLine( "\t3 - Exit without Save" );
+                Console.WriteLine();
+                Console.WriteLine( "\t0 - Cancel" );
+
+                int choise = int.Parse(Console.ReadLine());
+
+                if (choise == 1)
+                {
+                    Save();
+                    goto Start;
+                }
+                else if (choise == 2)
+                {
+                    Save();
+                    Console.WriteLine( "Content has been saved to " + FileName );
+                }
+                else if (choise == 3)
+                {
+                    Console.Clear();
+                    Console.WriteLine( "Are you sure? you are gonna lose all changes" );
+                    Console.WriteLine();
+                    Console.WriteLine( "\t1 - Yes, exit without saving" );
+                    Console.WriteLine();
+                    Console.WriteLine( "\t2 - Save and Exit" );
+
+                    if (int.Parse( Console.ReadLine() ) == 2)
+                    {
+                        Save();
+                    }
+                }
+                else
+                {
+                    goto Start;
+                }
             }
 
+            Console.WriteLine();
             Console.WriteLine( "Press any key to continue..." );
+
             Console.ReadKey( true );
+
+            Console.Clear();
         }
 
         #region Writing
@@ -53,7 +108,7 @@ namespace External.Program.TextEditor
             }
             else if (keyPressed.Key == ConsoleKey.Enter) //When Enter is pressed
             {
-                if (Row < 23)
+                if (Row < MaxLines)
                     Enter();
             }
             else if ((char.IsLetterOrDigit( keyPressed.KeyChar ) || char.IsPunctuation( keyPressed.KeyChar ) || char.IsWhiteSpace( keyPressed.KeyChar ) || char.IsSymbol( keyPressed.KeyChar )))
@@ -62,7 +117,7 @@ namespace External.Program.TextEditor
                 {
                     if (Text[Row] == null)
                     {
-                        Text[Row] = "";
+                        Text[Row] = string.Empty;
                     }
 
                     Text[Row] = Text[Row].Insert( Col , keyPressed.KeyChar.ToString() );
@@ -87,7 +142,7 @@ namespace External.Program.TextEditor
                     Col = Text[Row].Length;
                 }
             }
-            else if (keyPressed.Key == ConsoleKey.DownArrow && Row < Text.Length - 1 && Row < UsedLines && Text[Row + 1] != null && Row < 23)
+            else if (keyPressed.Key == ConsoleKey.DownArrow && Row < Text.Length - 1 && Row < MaxLines && Text[Row + 1] != null)
             {
                 Row++;
                 if (Col > Text[Row].Length)
@@ -115,23 +170,21 @@ namespace External.Program.TextEditor
                 Console.SetCursorPosition( 0 , Row );
                 Console.WriteLine( Text[Row] );
             }
-            else if (Row != UsedLines)
+            else if (Row != MaxLines)
             {
                 Text[Row] = Text[Row] + Text[Row + 1];
 
                 Console.SetCursorPosition( 0 , Row );
                 Console.WriteLine( Text[Row] );
-                Text[UsedLines + 1] = "";
+                Text[MaxLines + 1] = string.Empty;
 
-                for (int i = Row + 1 ; i < UsedLines + 1 ; i++)
+                for (int i = Row + 1 ; i < MaxLines ; i++)
                 {
                     Text[i] = Text[i + 1];
                     ClearRow( i );
                     Console.SetCursorPosition( 0 , i );
                     Console.WriteLine( Text[i] );
                 }
-
-                UsedLines--;
             }
         }
 
@@ -153,16 +206,15 @@ namespace External.Program.TextEditor
 
                 Console.SetCursorPosition( 0 , Row );
                 Console.WriteLine( Text[Row] );
-                Text[UsedLines + 1] = "";
+                Text[MaxLines + 1] = string.Empty;
 
-                for (int i = Row + 1 ; i < UsedLines + 1 ; i++)
+                for (int i = Row + 1 ; i < MaxLines ; i++)
                 {
                     Text[i] = Text[i + 1];
                     ClearRow( i );
                     Console.SetCursorPosition( 0 , i );
                     Console.WriteLine( Text[i] );
                 }
-                UsedLines--;
             }
         }
 
@@ -170,17 +222,17 @@ namespace External.Program.TextEditor
         {
             if (Text[Row + 1] == null)
             {
-                Text[Row + 1] = "";
+                Text[Row + 1] = string.Empty;
             }
             else
             {
                 if (Col < Text[Row].Length)
                 {
                     string tmp = Text[Row].Substring(Col, Text[Row].Length - Col);
-                    Text[Row] = (Col == 0 ? "" : Text[Row].Substring( 0 , Col ));
+                    Text[Row] = (Col == 0 ? string.Empty : Text[Row].Substring( 0 , Col ));
                     ClearRow( Row );
                     ClearRow( Row + 1 );
-                    for (int i = UsedLines + 1 ; i > Row + 1 ; i--)
+                    for (int i = MaxLines + 1 ; i > Row + 1 ; i--)
                     {
                         Text[i] = Text[i - 1];
                         ClearRow( i );
@@ -189,16 +241,15 @@ namespace External.Program.TextEditor
                 }
                 else
                 {
-                    Text[Row] = "";
+                    Text[Row] = string.Empty;
                 }
 
                 Console.SetCursorPosition( 0 , Row );
-                for (int i = Row ; i < UsedLines + 2 ; i++)
+                for (int i = Row ; i < MaxLines + 2 ; i++)
                 {
                     Console.WriteLine( Text[i] );
                 }
             }
-            UsedLines++;
             Row++;
             Col = 0;
         }
@@ -218,6 +269,9 @@ namespace External.Program.TextEditor
 
         private static void Save()
         {
+            Console.Clear();
+
+            File.WriteAllLines( FileName , Text );
         }
 
         private static void FileManagement(string name)
@@ -233,22 +287,21 @@ namespace External.Program.TextEditor
 
             try
             {
-                if (File.Exists( FileName ))
+                if (!File.Exists( FileName ))
                 {
-                    Console.WriteLine( "Found file!" );
-                }
-                else if (!File.Exists( FileName ))
-                {
-                    Console.WriteLine( "Creating file!" );
                     File.Create( FileName );
                 }
-
-                Console.Clear();
+                else
+                {
+                    Text = File.ReadAllLines( FileName );
+                }
             }
             catch (Exception ex)
             {
                 Console.WriteLine( ex.Message );
             }
+
+            Console.Clear();
         }
 
         #endregion File
